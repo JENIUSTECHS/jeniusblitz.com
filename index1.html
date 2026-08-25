@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jenius Blitz - Ultra-Fast Download & Stream</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            --bg-dark: #07080d;
+            --card-bg: rgba(26, 27, 38, 0.6);
+            --neon-cyan: #00e5ff;
+            --neon-purple: #b53cff;
+            --text-light: #f4f4f5;
+            --text-muted: #a1a1aa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 229, 255, 0.1), transparent 30%),
+                radial-gradient(circle at 85% 30%, rgba(181, 60, 255, 0.1), transparent 30%);
+            background-attachment: fixed;
+            line-height: 1.7;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(7, 8, 13, 0.85);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.8rem;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .logo-container img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+            transition: 0.3s;
+        }
+
+        .logo-container:hover img {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.8);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links button {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s ease;
+            padding: 10px 0;
+        }
+
+        .nav-links button:hover, .nav-links button.active {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            font-size: 2.5rem;
+            color: var(--neon-cyan);
+            cursor: pointer;
+            user-select: none;
+            transition: 0.3s;
+        }
+
+        .menu-toggle:hover {
+            text-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        /* Pages/Sections */
+        main {
+            flex: 1;
+        }
+
+        .page-section {
+            display: none;
+            padding: 80px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Areas */
+        .hero {
+            text-align: center;
+            padding: 40px 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-inline: auto;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--neon-cyan), #0055ff);
+            color: white;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 40px;
+            font-size: 1.3rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.7);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        /* Promo Video Section - UPDATED */
+        .promo-video-container {
+            max-width: 650px; /* Made the container smaller */
+            margin: 60px auto 80px; 
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 229, 255, 0.2);
+            border: 2px solid rgba(0, 229, 255, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .promo-video-container:hover {
+            box-shadow: 0 20px 50px rgba(0, 229, 255, 0.4);
+            border-color: var(--neon-cyan);
+        }
+
+        .promo-video-container video {
+            width: 100%;
+            max-height: 65vh; /* This guarantees the video will never be taller than the user's screen */
+            object-fit: contain; /* Keeps the entire video visible without cropping */
+            display: block;
+        }
+
+        /* Cards & Grids */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(181, 60, 255, 0.15);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 10px 30px rgba(0, 229, 255, 0.15);
+            transform: translateY(-10px);
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .card p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 16px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Download Guide */
+        .install-guide {
+            background: linear-gradient(145deg, rgba(26, 27, 38, 0.8), rgba(10, 11, 16, 0.9));
+            padding: 50px;
+            border-radius: 30px;
+            border-left: 6px solid var(--neon-purple);
+            margin-top: 60px;
+            text-align: left;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .install-guide h2 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+        }
+
+        .install-guide ol {
+            margin-left: 25px;
+            margin-top: 20px;
+        }
+
+        .install-guide li {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        .install-guide li strong {
+            color: var(--neon-cyan);
+        }
+
+        /* Installation Images Grid */
+        .install-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .install-images img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s;
+        }
+
+        .install-images img:hover {
+            transform: scale(1.05);
+            border-color: rgba(0, 229, 255, 0.4);
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+        
+        .faq-item:hover {
+            border-color: rgba(181, 60, 255, 0.4);
+            background: rgba(36, 37, 48, 0.7);
+        }
+
+        .faq-item h3 {
+            color: var(--neon-cyan);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .faq-item p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        /* Contact Details & Animation */
+        .developer-details {
+            margin: 0 auto;
+            max-width: 600px;
+            background: rgba(26, 27, 38, 0.8);
+            border: 2px solid rgba(0, 229, 255, 0.3);
+            padding: 50px 30px;
+            border-radius: 24px;
+            text-align: center;
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { 
+                box-shadow: 0 0 15px rgba(0, 229, 255, 0.1); 
+                border-color: rgba(0, 229, 255, 0.2);
+            }
+            to { 
+                box-shadow: 0 0 35px rgba(0, 229, 255, 0.4); 
+                border-color: rgba(0, 229, 255, 0.6);
+            }
+        }
+
+        .dev-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(90deg, #ffffff, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.3;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            text-decoration: none;
+            background: rgba(255,255,255,0.05);
+            padding: 18px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 350px;
+            font-weight: 500;
+        }
+
+        .contact-link:hover {
+            transform: translateY(-5px) scale(1.05);
+            background: rgba(0, 229, 255, 0.1);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 10px 25px rgba(0, 229, 255, 0.25);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(7, 8, 13, 0.95);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            margin-top: auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 3rem; }
+            .nav-links { gap: 20px; }
+            .promo-video-container { margin: 40px auto 60px; max-width: 90%; }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(10, 11, 16, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 30px 0;
+                gap: 25px;
+                border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+                transition: clip-path 0.4s ease-in-out;
+            }
+            .nav-links.active { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+            .nav-links button { font-size: 1.4rem; width: 100%; padding: 10px; }
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .page-section { padding: 50px 5%; }
+            .install-guide { padding: 30px 20px; }
+            .dev-title { font-size: 1.5rem; }
+            .promo-video-container { margin: 30px auto 50px; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo-container" onclick="showPage('home')">
+            <img src="images/logo.jpeg" alt="Jenius Blitz Logo">
+            <span>JENIUS<span class="gradient-text">BLITZ</span></span>
+        </div>
+        
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+        
+        <div class="nav-links" id="navLinks">
+            <button class="nav-btn active" data-page="home" onclick="showPage('home')">HOME</button>
+            <button class="nav-btn" data-page="download" onclick="showPage('download')">DOWNLOAD</button>
+            <button class="nav-btn" data-page="about" onclick="showPage('about')">ABOUT</button>
+            <button class="nav-btn" data-page="faq" onclick="showPage('faq')">FAQ</button>
+            <button class="nav-btn" data-page="contact" onclick="showPage('contact')">CONTACT</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <main>
+        <!-- Home Page -->
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <h1 class="gradient-text">YOUR ALL IN ONE<br>MEDIA POWERHOUSE</h1>
+                <p>Experience the web without limits. Ultra-Fast Multi-threaded Downloading, Bufferless Streaming, and Ad-Free Secure Browsing all in one lightweight application.</p>
+                <button class="btn-primary" onclick="showPage('download')">GET THE APK</button>
+            </div>
+
+            <!-- PROMO VIDEO SECTION -->
+            <div class="promo-video-container">
+                <video src="promo.mp4" controls poster="images/image1.jpeg"></video>
+            </div>
+
+            <div class="showcase-grid">
+                <div class="card">
+                    <h2 class="gradient-text">Ultra-Fast Browsing</h2>
+                    <p>Surf the web securely with no interruptions. Built with modern web engines for instantaneous page loads.</p>
+                    <img src="images/image1.jpeg" alt="Browser Interface">
+                </div>
+                <div class="card">
+                    <h2 class="gradient-text">High-Speed Downloads</h2>
+                    <p>Advanced multi-threaded architecture splits files to maximize your bandwidth and bypass server throttling.</p>
+                    <img src="images/image2.jpeg" alt="Download Manager">
+                </div>
+                <div class="card">
+                    <h2 class="gradient-text">Media Streaming</h2>
+                    <p>No more pauses. Our integrated media engine guarantees smooth, ad-free, high-definition playback.</p>
+                    <img src="images/image3.jpeg" alt="Video Player">
+                </div>
+            </div>
+        </section>
+
+        <!-- Download Page -->
+        <section id="download" class="page-section">
+            <div class="hero">
+                <h1 class="gradient-text">Download Jenius Blitz</h1>
+                <p>Version 1.0.0 | Size: ~45 MB | Requires Android 8.0+</p>
+                <a href="your-app-file.apk" download>
+                    <button class="btn-primary" style="margin-top: 20px;">DOWNLOAD APK NOW</button>
+                </a>
+            </div>
+
+            <div class="install-guide">
+                <h2>⚙️ How to Install on Android</h2>
+                <ol>
+                    <li>Click the <strong>Download APK Now</strong> button above to save the file directly to your device.</li>
+                    <li>Open your device's <strong>File Manager</strong> and locate the `JeniusBlitz.apk` file in your Downloads folder.</li>
+                    <li>Tap on the file. If prompted, go to <strong>Settings</strong> > <strong>Security</strong> and toggle on <strong>"Allow installation from unknown sources"</strong>.</li>
+                    <li>Tap <strong>Install</strong> and wait a few moments for the process to complete.</li>
+                    <li>Tap <strong>Open</strong> to launch Jenius Blitz and customize your engine preferences!</li>
+                </ol>
+                
+                <!-- Installation Images Grid -->
+                <div class="install-images">
+                    <img src="https://maketecheasier.com/wp-content/uploads/2019/02/install-unknown-sources-android-8-9-blocked.png" alt="Installation Blocked Prompt">
+                    <img src="https://maketecheasier.com/wp-content/uploads/2022/03/Unknown-Sources-Special-App.jpg" alt="Special App Access Setting">
+                    <img src="https://maketecheasier.com/wp-content/uploads/2022/03/Unknown-Sources-Install.jpg" alt="Install Unknown Apps Menu">
+                    <img src="https://maketecheasier.com/wp-content/uploads/2022/03/Unknown-Sources-Enable-App.jpg" alt="Enable Allow from this source">
+                </div>
+            </div>
+        </section>
+
+        <!-- About Page -->
+        <section id="about" class="page-section">
+            <div class="hero">
+                <h1 class="gradient-text">The Architecture</h1>
+                <p>Engineered for speed, built for reliability.</p>
+                
+                <div class="card" style="text-align: left; margin-top: 40px; max-width: 1000px; margin-inline: auto;">
+                    <h2 class="gradient-text" style="font-size: 2rem; margin-bottom: 20px;">Why Jenius Blitz?</h2>
+                    <p style="margin-bottom: 20px; font-size: 1.2rem; color: var(--text-light);">The modern internet is heavy, and standard mobile browsers simply struggle to keep up with large media files, leading to dropped connections and infinite buffering.</p>
+                    <p style="margin-bottom: 20px; font-size: 1.2rem; color: var(--text-light);">Jenius Blitz solves this through its cutting-edge tech stack. Utilizing native <strong>Kotlin</strong> and <strong>Jetpack Compose</strong>, the user interface remains fluid and responsive regardless of how heavily the app is working in the background.</p>
+                    <p style="font-size: 1.2rem; color: var(--text-light);">At its core, robust <strong>OkHttp</strong> network handling splits heavy downloads into multiple parallel threads, capturing every ounce of your available bandwidth. Paired with <strong>Media3 ExoPlayer</strong> integration, it acts as a flawless, standalone engine for all your media needs.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Page -->
+        <section id="faq" class="page-section">
+            <div class="hero">
+                <h1 class="gradient-text">Frequently Asked Questions</h1>
+                <p>Everything you need to know about Jenius Blitz.</p>
+            </div>
+            <div style="max-width: 900px; margin: 0 auto;">
+                <div class="faq-item">
+                    <h3>Is Jenius Blitz free to use?</h3>
+                    <p>Yes! Jenius Blitz is completely free to download and use for all your browsing, downloading, and streaming needs without hidden subscriptions.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Where are my downloaded files saved?</h3>
+                    <p>By default, files go straight to your device's primary Download folder. However, you have complete control—you can customize the storage location directly in the app's Engine Preferences tab.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How does the multi-threaded downloader actually work?</h3>
+                    <p>Instead of downloading a file in one single stream (which is easily throttled by servers), Jenius Blitz splits the file into multiple separate chunks. It downloads these chunks simultaneously using different network threads, maximizing your internet connection and bypassing standard server speed limits.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How does Jenius Blitz increase the speed?</h3>
+                    <p>Jenius Blitz does not increase the speed rather it helps to gather the device's bandwidth to be used by the app. About 90% of the bandwidth is consumed by the app to speed up your download and stream.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Page -->
+        <section id="contact" class="page-section">
+            <div class="hero">
+                <h1 class="gradient-text">Get In Touch</h1>
+                <p>Have questions, bug reports, or feature requests? Reach out directly!</p>
+            </div>
+            
+            <div class="developer-details">
+                <h2 class="dev-title">Designed and Developed by<br>Junaid Ehsan</h2>
+                
+                <div class="contact-links">
+                    <a href="https://wa.me/923254965456" target="_blank" class="contact-link">
+                        📞 +92 325 4965456
+                    </a>
+                    
+                    <a href="mailto:junaidehsan0786@gmail.com" class="contact-link">
+                        ✉️ junaidehsan0786@gmail.com
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Jenius Blitz. All rights reserved.</p>
+        <p style="font-size: 0.9rem; margin-top: 10px; color: #666;">Built for speed and performance.</p>
+    </footer>
+
+    <script>
+        // Toggle Mobile Menu
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // --- History API & Navigation Logic ---
+
+        // Handle browser Back/Forward buttons
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.pageId) {
+                showPage(event.state.pageId, false);
+            } else {
+                showPage('home', false);
+            }
+        });
+
+        // Initialize correct page on load (if URL has #faq, it loads FAQ)
+        document.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.substring(1);
+            const validPages = ['home', 'download', 'about', 'faq', 'contact'];
+            
+            if (hash && validPages.includes(hash)) {
+                showPage(hash, false);
+            } else {
+                // Default to home and replace state so back button works correctly from start
+                history.replaceState({ pageId: 'home' }, '', '#home');
+                showPage('home', false);
+            }
+        });
+
+        function showPage(pageId, pushToHistory = true) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show target section
+            document.getElementById(pageId).classList.add('active');
+            
+            // Highlight the correct button
+            const activeBtn = document.querySelector(`.nav-btn[data-page="${pageId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            
+            // Close mobile menu if it's open
+            if (window.innerWidth <= 768) {
+                document.getElementById('navLinks').classList.remove('active');
+            }
+            
+            // Update Browser History URL
+            if (pushToHistory) {
+                history.pushState({ pageId: pageId }, '', '#' + pageId);
+                // Only scroll to top if we clicked a link manually
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
